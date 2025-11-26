@@ -1,0 +1,277 @@
+/* ===== GLOBAL ===== */
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+}
+@property --angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 91deg;
+}
+body {
+
+ margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Poppins", sans-serif;
+  overflow: hidden;
+background: url(https://i.pinimg.com/originals/44/6e/3b/446e3b79395a287ca32f7977dd83b290.jpg);
+  background-size: cover;
+  animation: bgMove 12s infinite alternate ease-in-out;
+  position: relative;
+  }
+
+ 
+@keyframes bgMove {
+  from { background-position: 0% 50%; }
+  to   { background-position: 100% 50%; }
+}
+
+/* BACKGROUND ANIMATIONS */
+#backgroundAnim {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* GLASS CARD */
+.app {
+  width: 350px;
+  padding: 30px;
+  border-radius: 25px;
+
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.4);
+
+  text-align: center;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* TITLE */
+.title {
+  color: white;
+  font-size: 30px;
+  margin-bottom: 25px;
+  text-shadow: 0 0 15px #fff;
+}
+
+/* SEARCH */
+.search-box {
+  display: flex;
+  gap: 10px;
+}
+
+.search-box input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(255,255,255,0.3);
+  color: #fff;
+}
+
+.search-box input::placeholder {
+  color: #eee;
+}
+/* From Uiverse.io by vinodjangid07 */ 
+.button {
+  width: 110px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+background: linear-gradient(90deg, #bea8fd, #ffffff, #71a4f0);  border-radius: 30px;
+  color: rgb(12, 12, 12);
+  font-weight: 600;
+  border: none;
+  position: relative;
+  cursor: pointer;
+  transition-duration: .2s;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.116);
+  padding-left: 8px;
+  transition-duration: .5s;
+}
+
+.svgIcon {
+  height: 25px;
+  transition-duration: 1.5s;
+}
+
+.bell path {
+  fill: rgb(19, 19, 19);
+}
+
+.button:hover {
+  background-color: rgb(192, 255, 20);
+  transition-duration: .5s;
+}
+
+.button:active {
+  transform: scale(0.97);
+  transition-duration: .2s;
+}
+
+.button:hover .svgIcon {
+  transform: rotate(250deg);
+  transition-duration: 1.5s;
+}
+
+/* CARD */
+.weather {
+  margin-top: 25px;
+  padding: 25px;
+  border-radius: 20px;
+
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.4);
+
+  animation: cardShow .8s ease;
+}
+
+@keyframes cardShow {
+  from { opacity: 0; transform: scale(.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.icon {
+  width: 100px;
+  margin-bottom: 15px;
+  animation: float 3s infinite ease-in-out;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+.weather h2, .weather p {
+  color: white;
+  font-size: 20px;
+  text-shadow: 0 0 10px rgba(255,255,255,0.5);
+  margin-bottom: 5px;
+}
+
+.error {
+  margin-top: 15px;
+  color: #ff4f4f;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(255,0,0,0.6);
+}
+
+.hidden { display: none; }
+
+/* LOADER */
+.loader {
+  width: 45px;
+  height: 45px;
+  border: 4px solid #fff;
+  border-top-color: transparent;
+  border-radius: 50%;
+  margin: 10px auto;
+  animation: spin .8s infinite linear;
+}
+
+@keyframes spin {
+  from { transform: rotate(0); }
+  to   { transform: rotate(360deg); }
+}
+
+/* RESPONSIVE */
+@media (max-width: 450px) {
+  .app { width: 90%; }
+  .title { font-size: 24px; }
+}
+.rain {
+  position: fixed;
+  top: -20px;
+  width: 2px;
+  height: 15px;
+  background: rgba(255,255,255,0.8);
+  animation: rainFall linear infinite;
+}
+
+@keyframes rainFall {
+  to { transform: translateY(120vh); }
+}
+
+.snow {
+  position: fixed;
+  top: -10px;
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  opacity: .8;
+  animation: snowFall linear infinite;
+}
+
+@keyframes snowFall {
+  to { transform: translateY(100vh) rotate(360deg); }
+}
+/* ☀️ SOLEIL ANIMÉ */
+.sun {
+  position: fixed;
+  top: 10%;
+  right: 10%;
+  width: 120px;
+  height: 120px;
+  background: url(https://getwallpapers.com/wallpaper/full/c/9/6/1150703-forest-wallpaper-hd-3840x2160-for-android-50.jpg);
+  border-radius: 50%;
+  box-shadow: 0 0 25px #ffeb3b;
+  animation: sunPulse 3s infinite ease-in-out;
+}
+
+@keyframes sunPulse {
+  0% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.85; }
+}
+
+/* 🌙 NUIT AVEC ETOILES */
+.stars {
+  position:fixed;
+  width: 3px;
+  height: 3px;
+  background: white;
+  border-radius: 50%;
+  animation: starTwinkle infinite ease-in-out;
+}
+
+@keyframes starTwinkle {
+  0% { opacity: 0.2; }
+  50% { opacity: 1; }
+  100% { opacity: 0.2; }
+}
+
+/* ❄️ FROID */
+.cold-bg {
+  background: url(https://getwallpapers.com/wallpaper/full/1/2/d/1172814-widescreen-cold-weather-wallpaper-1920x1080-for-iphone-6.jpg);
+}
+
+/* 🌙 NUIT GLOBALE */
+.night-bg {
+
+  background: rgb(3, 26, 69)
+}
+
+.time {
+    color: white;
+    font-size: 18px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 8px rgba(255,255,255,0.5);
+}
