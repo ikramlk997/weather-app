@@ -1,57 +1,63 @@
 function searchCity() {
-    const city = document.getElementById("city").value;
+    const city = document.getElementById("city").value.trim();
     if (!city) return;
 
-    document.getElementById("loader").classList.remove("hidden");
-    document.getElementById("card").classList.add("hidden");
-    document.getElementById("error").classList.add("hidden");
+    toggleUI(true);
 
     fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}`)
         .then(res => res.json())
         .then(data => {
-            if (!data.results) {
-                errorMsg();
-                return;
-            }
+            if (!data.results) return errorMsg();
 
             const { latitude, longitude, name } = data.results[0];
             getWeather(latitude, longitude, name);
-        });
+        })
+        .catch(errorMsg);
 }
 
+/* ---------------------------------------------
+   WEATHER FETCH
+----------------------------------------------*/
 function getWeather(lat, lon, cityName) {
-    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`)
+    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto`)
         .then(res => res.json())
         .then(data => {
-            document.getElementById("loader").classList.add("hidden");
-            document.getElementById("card").classList.remove("hidden");
+            toggleUI(false);
 
-            const temp = data.current_weather.temperature;
-            const wind = data.current_weather.windspeed;
-            const code = data.current_weather.weathercode;
+            const { temperature, windspeed, weathercode, time } = data.current_weather;
 
-            updateBackground(temp, code);
+            const localTime = new Date(time);
+            const hours = localTime.getHours();
+            const minutes = localTime.getMinutes().toString().padStart(2,"0");
 
             document.getElementById("cityName").textContent = cityName;
-            document.getElementById("temp").textContent = temp + "°C";
-            document.getElementById("wind").textContent = "Vent : " + wind + " km/h";
+            document.getElementById("temp").textContent = temperature + "°C";
+            document.getElementById("wind").textContent = "Vent : " + windspeed + " km/h";
+            document.getElementById("desc").textContent = getDescription(weathercode);
+            document.getElementById("localTime").textContent = `Heure locale : ${hours}:${minutes}`;
 
-            const desc = getDescription(code);
-            document.getElementById("desc").textContent = desc;
-
-            const icon = getIcon(code);
-            document.getElementById("weatherIcon").src = icon;
-
-            animateBackground(code);
-        });
+            updateBackground(temperature, weathercode, hours);
+        })
+        .catch(errorMsg);
 }
 
+/* ---------------------------------------------
+   UI HELPERS
+----------------------------------------------*/
 function errorMsg() {
-    document.getElementById("loader").classList.add("hidden");
+    toggleUI(false);
     document.getElementById("error").classList.remove("hidden");
 }
 
-/* ===== WEATHER DESCRIPTION ===== */
+function toggleUI(loading) {
+    document.getElementById("loader").classList.toggle("hidden", !loading);
+    document.getElementById("card").classList.toggle("hidden", loading);
+    document.getElementById("error").classList.add("hidden");
+}
+
+/* ---------------------------------------------
+   DESCRIPTION METEO
+----------------------------------------------*/
 function getDescription(code) {
     if (code === 0) return "Ciel dégagé ☀️";
     if ([1,2,3].includes(code)) return "Partiellement nuageux ⛅";
@@ -63,112 +69,88 @@ function getDescription(code) {
     return "Temps inconnu";
 }
 
-/* ===== ICONES METEO ===== */
-function getIcon(code) {
-    if (code === 0) return "https://cdn-icons-png.flaticon.com/512/869/869869.png";  // soleil
-    if ([1,2,3].includes(code)) return "https://cdn-icons-png.flaticon.com/512/1163/1163624.png"; // nuages
-    if ([61,63,65].includes(code)) return "https://cdn-icons-png.flaticon.com/512/414/414974.png"; // pluie
-    if ([71,73,75].includes(code)) return "https://cdn-icons-png.flaticon.com/512/642/642102.png"; // neige
-    if ([95,96,99].includes(code)) return "https://cdn-icons-png.flaticon.com/512/1146/1146869.png"; // orage
+/* ---------------------------------------------
+   BACKGROUND ANIMATION
+----------------------------------------------*/
+function updateBackground(temp, code, hour) {
 
-    return "https://cdn-icons-png.flaticon.com/512/3208/3208755.png";
-}
-
-/* ===== ANIMATIONS BACKGROUND ===== */
-function animateBackground(code) {
     const bg = document.getElementById("backgroundAnim");
     bg.innerHTML = "";
-
-    // pluie
-    if ([61,63,65].includes(code)) {
-        for (let i = 0; i < 40; i++) {
-            const drop = document.createElement("div");
-            drop.className = "rain";
-            drop.style.left = Math.random() * 100 + "%";
-            drop.style.animationDuration = (0.6 + Math.random()) + "s";
-            bg.appendChild(drop);
-        }
-    }
-
-    // neige
-    if ([71,73,75].includes(code)) {
-        for (let i = 0; i < 40; i++) {
-            const snow = document.createElement("div");
-            snow.className = "snow";
-            snow.style.left = Math.random() * 100 + "%";
-            snow.style.animationDuration = (2 + Math.random() * 2) + "s";
-            bg.appendChild(snow);
-        }
-    }
-}
-function updateBackground(temp, code) {
-    const bg = document.getElementById("backgroundAnim");
-    bg.innerHTML = "";
-    document.body.classList.remove("cold-bg", "night-bg");
-
-    const hour = new Date().getHours();
+    document.body.className = ""; // reset
 
     /* 🌙 NUIT */
-    if (hour >= 20 || hour <= 6) {
+    if (hour >= 20 || hour < 6) {
         document.body.classList.add("night-bg");
-
-        for (let i = 0; i < 40; i++) {
-            const star = document.createElement("div");
-            star.className = "stars";
-            star.style.left = Math.random() * 100 + "%";
-            star.style.top = Math.random() * 100 + "%";
-            star.style.animationDuration = (2 + Math.random() * 3) + "s";
-            bg.appendChild(star);
-        }
+        createStars(bg, 50);
         return;
     }
+
+    /* 🌞 JOUR */
+    document.body.classList.add("sunny");
+    createSun(bg);
+    createClouds(bg, 3);
 
     /* ❄️ FROID */
     if (temp <= 5) {
         document.body.classList.add("cold-bg");
+        createSnow(bg, 40);
     }
 
-    /* ☀️ SOLEIL CHAUD */
-    if (temp >= 28 || code === 0) {
-        const sun = document.createElement("div");
-        sun.className = "sun";
-        bg.appendChild(sun);
-    }
-
-    /* 🌧️ pluie */
-    if ([61,63,65].includes(code)) animateBackground(code);
-
-    /* ❄️ neige */
-    if ([71,73,75].includes(code)) animateBackground(code);
+    /* 🌧️ PLUIE / NEIGE selon WMO */
+    if ([51,52,53,55,61,63,65,80,81,82].includes(code)) createRain(bg, 60);
+    if ([71,73,75,85,86].includes(code)) createSnow(bg, 40);
+    if (code >= 95 && code <= 99) createRain(bg, 80); // orages
 }
 
-function getWeather(lat, lon, cityName) {
-    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&timezone=auto`)
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById("loader").classList.add("hidden");
-            document.getElementById("card").classList.remove("hidden");
+/* ---------------------------------------------
+   ELEMENTS GRAPHICS
+----------------------------------------------*/
+function createSun(bg) {
+    const sun = document.createElement("div");
+    sun.className = "sun";
+    bg.appendChild(sun);
+}
 
-            const temp = data.current_weather.temperature;
-            const wind = data.current_weather.windspeed;
-            const code = data.current_weather.weathercode;
+function createStars(bg, count) {
+    for (let i = 0; i < count; i++) {
+        const s = document.createElement("div");
+        s.className = "stars";
+        s.style.left = Math.random()*100 + "%";
+        s.style.top = Math.random()*100 + "%";
+        s.style.opacity = 0.4 + Math.random()*0.6;
+        s.style.animationDuration = (1 + Math.random()*3) + "s";
+        bg.appendChild(s);
+    }
+}
 
-            document.getElementById("cityName").textContent = cityName;
-            document.getElementById("temp").textContent = temp + "°C";
-            document.getElementById("wind").textContent = "Vent : " + wind + " km/h";
+function createClouds(bg, count) {
+    for (let i = 0; i < count; i++) {
+        const c = document.createElement("div");
+        c.className = "cloud";
+        c.style.top = (5 + Math.random()*40) + "%";
+        c.style.left = (-30 + Math.random()*130) + "%";
+        c.style.opacity = 0.6 + Math.random()*0.4;
+        c.style.animationDuration = (25 + Math.random()*20) + "s";
+        bg.appendChild(c);
+    }
+}
 
-            const desc = getDescription(code);
-            document.getElementById("desc").textContent = desc;
+function createRain(bg, count) {
+    for (let i = 0; i < count; i++) {
+        const d = document.createElement("div");
+        d.className = "rain";
+        d.style.left = Math.random()*100 + "%";
+        d.style.animationDuration = (0.3 + Math.random()*0.6) + "s";
+        bg.appendChild(d);
+    }
+}
 
-            animateBackground(code);
-            updateBackground(temp, code);
-
-            // ---------- AJOUT : Heure locale ----------
-            // Open-Meteo fournit directement current_weather.time au fuseau de la ville
-            const localTimeStr = data.current_weather.time; // ex: "2025-11-26T21:16"
-            const localTime = new Date(localTimeStr);
-            const hours = localTime.getHours().toString().padStart(2, "0");
-            const minutes = localTime.getMinutes().toString().padStart(2, "0");
-            document.getElementById("localTime").textContent = `Heure locale : ${hours}:${minutes}`;
-        });
+function createSnow(bg, count) {
+    for (let i = 0; i < count; i++) {
+        const s = document.createElement("div");
+        s.className = "snow";
+        s.style.left = Math.random()*100 + "%";
+        s.style.animationDuration = (2 + Math.random()*3) + "s";
+        bg.appendChild(s);
+    }
 }
