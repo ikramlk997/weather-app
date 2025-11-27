@@ -41,7 +41,7 @@ function getWeather(lat, lon, cityName) {
         .catch(errorMsg);
 }
 
-/* ---------------------------------------------
+/* ---------------------------------------by ikram lk------
    UI HELPERS
 ----------------------------------------------*/
 function errorMsg() {
@@ -55,7 +55,7 @@ function toggleUI(loading) {
     document.getElementById("error").classList.add("hidden");
 }
 
-/* ---------------------------------------------
+/* --------------------------------------by ikram lk-------
    DESCRIPTION METEO
 ----------------------------------------------*/
 function getDescription(code) {
@@ -69,7 +69,7 @@ function getDescription(code) {
     return "Temps inconnu";
 }
 
-/* ---------------------------------------------
+/* ----------------------------------by ikram lk-----------
    BACKGROUND ANIMATION
 ----------------------------------------------*/
 function updateBackground(temp, code, hour) {
@@ -102,7 +102,7 @@ function updateBackground(temp, code, hour) {
     if (code >= 95 && code <= 99) createRain(bg, 80); // orages
 }
 
-/* ---------------------------------------------
+/* ---------------------------------by ikram lk------------
    ELEMENTS GRAPHICS
 ----------------------------------------------*/
 function createSun(bg) {

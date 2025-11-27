@@ -25,7 +25,11 @@ body {
   to   { background-position: 100% 50%; }
 }
 
-/* BACKGROUND LAYER */
+/*
+////////////////////////////////by IKRAM LK /////////////////
+
+
+ BACKGROUND LAYER */
 #backgroundAnim {
   position: fixed;
   top: 0; left: 0;
@@ -81,7 +85,7 @@ body {
   color: #eee;
 }
 
-/* SEARCH BUTTON */
+/* SEARCH BUTTON              by ikram lk*/
 .button {
   width: 110px;
   height: 40px;
@@ -90,7 +94,7 @@ body {
   justify-content: flex-start;
   gap: 10px;
 
-  background: linear-gradient(90deg, #bea8fd, #ffffff, #71a4f0);
+  background: linear-gradient(90deg, #aee9fb, #7edefb, #1ac8fd);
   border-radius: 30px;
   color: rgb(12, 12, 12);
   font-weight: 600;
@@ -114,7 +118,7 @@ body {
   transform: rotate(250deg);
 }
 
-/* === WEATHER CARD === */
+/* === WEATHER CARD ===        by ikram lk*/  
 .weather {
   margin-top: 25px;
   padding: 25px;
@@ -296,4 +300,76 @@ body {
   font-size: 18px;
   margin-bottom: 10px;
   text-shadow: 0 0 8px rgba(255,255,255,0.5);
+}
+
+.footer {
+    position: fixed;
+    bottom: 10px;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 14px;
+    opacity: 0.7;
+    text-shadow: 0 0 5px #000;
+}
+
+
+/* ───────────────────────────── */
+/*   LOGO ATMOSLIVE – STYLE 4    */
+/* ───────────────────────────── */
+.atmoslive-neon {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    z-index: 999;
+    animation: logoFloat 5s infinite ease-in-out;
+}
+
+/* Icône néon rond */
+.atmoslive-neon .icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid rgba(0,200,255,0.9);
+    box-shadow: 
+        0 0 12px rgba(0,200,255,0.9),
+        inset 0 0 12px rgba(0,200,255,0.6);
+    animation: iconPulse 3s infinite ease-in-out;
+}
+
+/* Texte futuriste + mouvement */
+.atmoslive-neon .logo-text {
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+    text-shadow: 0 0 10px rgba(0,200,255,1);
+    animation: textGlow 4s infinite ease-in-out;
+}
+
+/* ───────────────────────────── */
+/* ANIMATIONS */
+/* ───────────────────────────── */
+
+/* Logo flotte légèrement vers le haut/bas */
+@keyframes logoFloat {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+    100% { transform: translateY(0); }
+}
+
+/* Le texte s'illumine doucement */
+@keyframes textGlow {
+    0% { text-shadow: 0 0 5px rgba(0,200,255,0.5); opacity: 0.8; }
+    50% { text-shadow: 0 0 13px rgba(0,200,255,1); opacity: 1; }
+    100% { text-shadow: 0 0 5px rgba(0,200,255,0.5); opacity: 0.8; }
+}
+
+/* L’icône pulse comme un néon */
+@keyframes iconPulse {
+    0% { box-shadow: 0 0 10px rgba(0,200,255,0.7); }
+    50% { box-shadow: 0 0 15px rgba(0,200,255,1); }
+    100% { box-shadow: 0 0 10px rgba(0,200,255,0.7); }
 }
