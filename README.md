@@ -1,4 +1,6 @@
-<img width="2147" height="1250" alt="image" src="https://github.com/user-attachments/assets/33d48d5c-55bb-463a-a320-c49336af8c9d" /># 🌤️ AtmosLive
+![Enregistrement2025-11-27184306-ezgif com-optimize](https://github.com/user-attachments/assets/ddef3d1a-ad9a-4c67-98ed-0f8f04a20b58)
+
+🌤️ AtmosLive
 AtmosLive est une application météo moderne et dynamique qui affiche en temps réel la météo d’une ville avec un fond animé réactif : pluie, neige, étoiles, ciel ensoleillé ou nuit étoilée.
 
 ## 🚀 Fonctionnalités
