@@ -25,6 +25,29 @@ body {
   to   { background-position: 100% 50%; }
 }
 
+/* Quand le fond est sunny, texte noir */
+body.sunny,
+body.sunny .title,
+body.sunny .weather h2,
+body.sunny .weather p,
+body.sunny .time,
+body.sunny .footer {
+    color: black;
+    text-shadow: none; /* tu peux enlever l'ombre pour lisibilité */
+}
+
+/* Si certains textes ont déjà une couleur spécifique, tu peux forcer */
+body.sunny .app {
+    color: black;
+}
+
+body.sunny input::placeholder {
+    color: #333;
+}
+body.sunny .textcity {
+    color: #000;
+}
+
 /*
 ////////////////////////////////by IKRAM LK /////////////////
 
