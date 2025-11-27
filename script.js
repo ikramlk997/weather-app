@@ -26,20 +26,45 @@ function getWeather(lat, lon, cityName) {
 
             const { temperature, windspeed, weathercode, time } = data.current_weather;
 
-            const localTime = new Date(time);
-            const hours = localTime.getHours();
-            const minutes = localTime.getMinutes().toString().padStart(2,"0");
+            // Récupère le fuseau horaire de la ville renvoyé par l'API
+            // timezone: string comme "Europe/Paris"
+            const timezone = data.timezone || "UTC";
 
+            // Fonction pour calculer l'heure exacte de la ville en temps réel
+            function getCityLocalTime() {
+                const now = new Date(); // Heure actuelle du PC
+                // Convertit en heure locale de la ville via Intl.DateTimeFormat
+                return new Intl.DateTimeFormat('fr-FR', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
+                    timeZone: timezone
+                }).format(now);
+            }
+
+            // Met à jour l'heure toutes les secondes
+            const localTimeElem = document.getElementById("localTime");
+            localTimeElem.textContent = `Heure locale : ${getCityLocalTime()}`;
+            if (window.cityTimeInterval) clearInterval(window.cityTimeInterval); // supprime interval précédent
+            window.cityTimeInterval = setInterval(() => {
+                localTimeElem.textContent = `Heure locale : ${getCityLocalTime()}`;
+            }, 1000);
+
+            // Mise à jour de la météo
             document.getElementById("cityName").textContent = cityName;
             document.getElementById("temp").textContent = temperature + "°C";
             document.getElementById("wind").textContent = "Vent : " + windspeed + " km/h";
             document.getElementById("desc").textContent = getDescription(weathercode);
-            document.getElementById("localTime").textContent = `Heure locale : ${hours}:${minutes}`;
 
-            updateBackground(temperature, weathercode, hours);
+            // Pour le background, on peut utiliser l'heure arrondie à l'heure locale
+            const hourForBg = parseInt(getCityLocalTime().split(":")[0], 10);
+            updateBackground(temperature, weathercode, hourForBg);
         })
         .catch(errorMsg);
 }
+
+
 
 /* ---------------------------------------by ikram lk------
    UI HELPERS
